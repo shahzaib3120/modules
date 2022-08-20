@@ -20,9 +20,9 @@ const Filter = () => {
   const [age, setAge] = useState("");
   const [grades, setGrades] = useState("");
   const [interests, setInterests] = useState("");
-  const handleSeletion = title => {
+  const handleSeletion = (title) => {
     if (selected.includes(title)) {
-      setSelected(selected.filter(item => item !== title));
+      setSelected(selected.filter((item) => item !== title));
     } else {
       setSelected([...selected, title]);
     }
@@ -40,29 +40,29 @@ const Filter = () => {
         <Tile
           title={"Sunday"}
           selected={selected.includes("Sunday")}
-          onPress={x => handleSeletion(x)}
+          onPress={(x) => handleSeletion(x)}
         />
         <Tile
           title={"Wednesday"}
           selected={selected.includes("Wednesday")}
-          onPress={x => handleSeletion(x)}
+          onPress={(x) => handleSeletion(x)}
         />
         <Separator title={"Desired Days"} />
         <Tile
           title={"Half-Day Mornins"}
           selected={selected.includes("Half-Day Mornins")}
-          onPress={x => handleSeletion(x)}
+          onPress={(x) => handleSeletion(x)}
         />
         <Tile
           title={"Full Day"}
           selected={selected.includes("Full Day")}
-          onPress={x => handleSeletion(x)}
+          onPress={(x) => handleSeletion(x)}
         />
         <Separator title={"Budget"} />
         <Tile
           title={"Per week"}
           selected={selected.includes("Per week")}
-          onPress={x => handleSeletion(x)}
+          onPress={(x) => handleSeletion(x)}
         />
         <View style={styles.halfInputs}>
           <Input
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
 });
 
 export default Filter;
-const Input = props => {
+const Input = (props) => {
   return (
     <View style={[inputStyles.inputContainer, props.containerStyle]}>
       {props.text
@@ -157,7 +157,7 @@ const Input = props => {
         ]}
         placeholder={props.placeholder ? props.placeholder : "Enter"}
         value={props.value}
-        onChangeText={text => props.onChange(text)}
+        onChangeText={(text) => props.onChange(text)}
         placeholderTextColor={
           props.placeholderTextColor ? props.placeholderTextColor : "#9B9B9B"
         }
@@ -235,7 +235,8 @@ const TabView = ({
   onPress,
   tabColor,
   backgroundColor,
-  style
+  style,
+  icons
 }) => {
   const tabColorStyle = {
     backgroundColor: tabColor || "#fff"
@@ -246,16 +247,35 @@ const TabView = ({
   const propStyle = style || {};
   return (
     <View
-      style={[tabViewStyles.paletteContainer, backgroundColorStyle, propStyle]}>
+      style={[tabViewStyles.paletteContainer, backgroundColorStyle, propStyle]}
+    >
       {tabTitles.map((title, index) => (
         <Pressable
           onPress={() => (onPress ? onPress(index) : null)}
           style={
             index === selected
-              ? [tabViewStyles.selected, tabColorStyle]
-              : [tabViewStyles.unSelected, backgroundColorStyle]
+              ? [tabViewStyles.selected, tabColorStyle, tabViewStyles.tabItem]
+              : [
+                  tabViewStyles.unSelected,
+                  backgroundColorStyle,
+                  tabViewStyles.tabItem
+                ]
           }
-          key={index}>
+          key={index}
+        >
+          {icons
+            ? (
+            <Image
+              source={icons[index]}
+              style={[
+                tabViewStyles.icon,
+                index === selected
+                  ? tabViewStyles.selectedIcon
+                  : tabViewStyles.unSelectedIcon
+              ]}
+            />
+              )
+            : null}
           <Text>{title}</Text>
         </Pressable>
       ))}
@@ -265,7 +285,6 @@ const TabView = ({
 
 const tabViewStyles = StyleSheet.create({
   paletteContainer: {
-    width: "80%",
     height: 48,
     backgroundColor: "#E4E4E4",
     flexDirection: "row",
@@ -274,26 +293,37 @@ const tabViewStyles = StyleSheet.create({
     padding: 6,
     marginVertical: 10
   },
-  selected: {
+  tabItem: {
     borderRadius: 10,
     flex: 1,
-    backgroundColor: "#fff",
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
+    flexDirection: "row"
+  },
+  selected: {
     shadowColor: "gray",
-    elevation: 10
+    elevation: 10,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5
   },
   unSelected: {
-    flex: 1,
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#E4E4E4",
-    borderRadius: 10
+    backgroundColor: "#f1f1f1"
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    resizeMode: "contain",
+    marginRight: 5
+  },
+  selectedIcon: {
+    tintColor: "#000"
+  },
+  unSelectedIcon: {
+    tintColor: "#7C7C7C"
   }
 });
-
 const Separator = ({ title }) => {
   return (
     <View style={separatorStyles.separator}>
@@ -325,13 +355,14 @@ const separatorStyles = StyleSheet.create({
   }
 });
 
-const Checkbox = props => {
+const Checkbox = (props) => {
   return (
     <Pressable
       onPress={() => {
         props.setValue(!props.value);
       }}
-      style={[checkboxStyles.container, props.style]}>
+      style={[checkboxStyles.container, props.style]}
+    >
       <Image
         source={
           props.value
@@ -382,7 +413,7 @@ const tileStyles = StyleSheet.create({
     color: "#111112"
   }
 });
-const Button = params => {
+const Button = (params) => {
   const backgroundColor = params.color ? params.color : "#000";
   const textColor = params.textColor ? params.textColor : "#fff";
   const btnStyle = {
@@ -398,7 +429,8 @@ const Button = params => {
       <View style={!params.hideShadow ? buttonStyles.shadowContainer : null}>
         <Pressable
           style={[buttonStyles.btn, btnStyle, params.style]}
-          onPress={params.onPress}>
+          onPress={params.onPress}
+        >
           <Text style={[buttonStyles.btnText, btnText]}>
             {params.buttonText}
           </Text>
